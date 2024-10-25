@@ -1,13 +1,17 @@
 You will have to run both server and FE in 2 terminals.
 
 Steps to run todo-list-server: 
+```
 npm ci
 npm run build
 npm start
+```
 
 Steps to run todo-react-mui:
+```
 npm ci
 npm start
+```
 
 Description: 
 A) This simple Todo-list application allows to add, update, and delete tasks. No MongoDB database was configured, so only an in-memory array as a database is set up.
