@@ -1,6 +1,8 @@
 import { Task } from './types';
 import { asyncHandler } from "./async-middleware";
 
+let lastId = 1;
+
 let tasks: Task[] = [
 
 ];
@@ -41,9 +43,10 @@ export const deleteTask = asyncHandler(async (req): Promise<void> => {
 export const addTask = asyncHandler(async (req): Promise<Task> => {
   const task = {
     ...req.body,
-    id: String(tasks.length + 1),
+    id: lastId,
     done: false
   };
+  lastId++;
 
   tasks = [...tasks, task];
 
