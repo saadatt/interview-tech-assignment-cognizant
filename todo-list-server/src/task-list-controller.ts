@@ -1,5 +1,6 @@
 import { Task } from './types';
 import { asyncHandler } from "./async-middleware";
+import { TaskNotFoundError } from './errors';
 
 let lastId = 1;
 
@@ -19,11 +20,20 @@ export const loadTasks = asyncHandler(
   },
 );
 
-export const updateTask = asyncHandler(async (req): Promise<Task> => {
-  const id = req.params['id'];
-  const task = req.body;
-
+function getTaskIdx(id: string): number {
   const idx = tasks.findIndex(t => t.id === id);
+
+  if (idx === -1) {
+    throw new TaskNotFoundError(id);
+  }
+
+  return idx;
+}
+
+export const updateTask = asyncHandler(async (req): Promise<Task> => {
+  const idx = getTaskIdx(req.params['id']);
+  const task = req.body;
+  
   tasks[idx] = {
     ...tasks[idx],
     ...task
@@ -43,7 +53,7 @@ export const deleteTask = asyncHandler(async (req): Promise<void> => {
 export const addTask = asyncHandler(async (req): Promise<Task> => {
   const task = {
     ...req.body,
-    id: lastId,
+    id: String(lastId),
     done: false
   };
   lastId++;
